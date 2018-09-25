@@ -90,11 +90,12 @@ class OptimizedImages extends Component
             foreach ($retinaSizes as $retinaSize) {
                 $finalFormat = $variant['format'] ?? $asset->getExtension();
                 // Only try the transform if it's possible
-                $canManipulateAsImage = Image::canManipulateAsImage($finalFormat)
-                    && Image::canManipulateAsImage($asset->getExtension())
-                    && $asset->height > 0;
-                // Allow PDFs to be manipulated if setting is turned on
-                $canManipulateAsImage = $settings->imgixAllowPdfs && $asset->kind === 'pdf';
+                // Allow PDFs to be manipulated if setting "imgixAllowPdfs" is true
+                $canManipulateAsImage = (Image::canManipulateAsImage($finalFormat) &&
+                    Image::canManipulateAsImage($asset->getExtension()) &&
+                    $asset->height > 0) ||
+                    ($settings->imgixAllowPdfs && $asset->kind === 'pdf');
+
                 if($canManipulateAsImage) {
                     // Create the transform based on the variant
                     list($transform, $aspectRatio) = $this->getTransformFromVariant($asset, $variant, $retinaSize);
