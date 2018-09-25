@@ -37,6 +37,9 @@ return [
     // The optional security token used to sign image URLs from Imgix
     'imgixSecurityToken' => '',
 
+    // Allow PDFs to be used as images as supported by Imgix
+    'imgixAllowPdfs' => false,
+
     // Should the image variants in an Asset Volume be automatically re-saved when saving
     // an OptimizedImages field, saving an Asset Volume that has an OptimizedImages field
     // in its layout, or saving the ImageOptimized settings. Set this to false only if

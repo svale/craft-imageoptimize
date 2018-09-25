@@ -83,7 +83,10 @@
                                 {% set aspectRatio = variant.aspectRatioX / variant.aspectRatioY %}
                                 {% set useAspectRatio = variant.useAspectRatio ?? true %}
                                 {% if useAspectRatio != true %}
-                                    {% set aspectRatio = value.originalImageWidth / value.originalImageHeight %}
+                                    {# Fallback to defaults.  A TMP FIX as the PDF does not have originalImageWidth and originalImageHeight  #}
+                                    {% set originalImageHeight = value.originalImageHeight|default(3) %}
+                                    {% set originalImageWidth = value.originalImageWidth|default(4) %}
+                                    {% set aspectRatio = originalImageWidth / originalImageHeight %}
                                 {% endif %}
                                 {% set thisWidth = (realWidth * 200) / maxWidth %}
                                 {% set thisHeight = thisWidth / aspectRatio %}

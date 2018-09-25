@@ -49,6 +49,12 @@ class Settings extends Model
     public $imgixSecurityToken = '';
 
     /**
+     * @var bool When Imgix is used as transform method, should PDFs be
+     *          allowd to used as master image for transforms.
+     */
+    public $imgixAllowPdfs = false;
+
+    /**
      * @var bool Should the image variants in an Asset Volume be automatically
      *      re-saved when saving an OptimizedImages field, saving an Asset
      *      Volume that has an OptimizedImages field in its layout, or saving
@@ -283,6 +289,7 @@ class Settings extends Model
             ['imgixSecurityToken', 'default', 'value' => ''],
             [
                 [
+                    'imgixAllowPdfs',
                     'automaticallyResaveImageVariants',
                     'generateTransformsBeforePageLoad',
                     'createColorPalette',
@@ -327,6 +334,7 @@ class Settings extends Model
             'imgixDomain',
             'imgixApiKey',
             'imgixSecurityToken',
+            'imgixAllowPdfs',
             'createColorPalette',
             'createPlaceholderSilhouettes',
             'lowerQualityRetinaImageVariants',

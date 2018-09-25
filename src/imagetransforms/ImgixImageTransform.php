@@ -71,6 +71,10 @@ class ImgixImageTransform extends ImageTransform implements ImageTransformInterf
                         $params[$value] = $transform[$key];
                     }
                 }
+                // Remove height parameter if original asset is PDF
+                if($asset->kind === 'pdf') {
+                    ArrayHelper::remove($params, 'h');
+                }
                 // Remove any 'AUTO' settings
                 ArrayHelper::removeValue($params, 'AUTO');
                 // Handle the Imgix auto setting for compression/format
@@ -121,11 +125,14 @@ class ImgixImageTransform extends ImageTransform implements ImageTransformInterf
                             $params['fp-x'] = $focalPoint['x'];
                             $params['fp-y'] = $focalPoint['y'];
                             $cropParams[] = 'focalpoint';
-                        } elseif (preg_match('/(top|center|bottom)-(left|center|right)/', $transform->position)) {
+                        } elseif (preg_match('/(top|center|bottom)-(left|center|right)/', $transform->position)) {                     
                             // Imgix defaults to 'center' if no param is present
                             $filteredCropParams = explode('-', $transform->position);
                             $filteredCropParams = array_diff($filteredCropParams, ['center']);
-                            $cropParams[] = $filteredCropParams;
+                            // No reason to pass on an empty array (can happen if source is PDF)
+                            if (!empty($filteredCropParams)) {
+                                $cropParams[] = $filteredCropParams;
+                            }
                         }
                         if (!empty($cropParams)) {
                             $params['crop'] = implode(',', $cropParams);

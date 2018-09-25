@@ -90,9 +90,12 @@ class OptimizedImages extends Component
             foreach ($retinaSizes as $retinaSize) {
                 $finalFormat = $variant['format'] ?? $asset->getExtension();
                 // Only try the transform if it's possible
-                if (Image::canManipulateAsImage($finalFormat)
+                $canManipulateAsImage = Image::canManipulateAsImage($finalFormat)
                     && Image::canManipulateAsImage($asset->getExtension())
-                    && $asset->height > 0) {
+                    && $asset->height > 0;
+                // Allow PDFs to be manipulated if setting is turned on
+                $canManipulateAsImage = $settings->imgixAllowPdfs && $asset->kind === 'pdf';
+                if($canManipulateAsImage) {
                     // Create the transform based on the variant
                     list($transform, $aspectRatio) = $this->getTransformFromVariant($asset, $variant, $retinaSize);
                     // Only create the image variant if it is not upscaled, or they are okay with it being up-scaled
@@ -130,6 +133,21 @@ class OptimizedImages extends Component
                 ];
                 list($transform, $aspectRatio) = $this->getTransformFromVariant($asset, $variant, 1);
                 $this->addVariantImageToModel($asset, $model, $transform, $variant, $aspectRatio);
+ 
+            // For PDFs create a reasonable variant
+            } else if($settings->imgixAllowPdfs && $asset->kind === 'pdf') {
+                $variant =         [
+                    'width'          => 1200,
+                    'useAspectRatio' => false,
+                    'aspectRatioX'   => 1200,
+                    'aspectRatioY'   => 1,
+                    'retinaSizes'    => ['1'],
+                    'quality'        => 0,
+                    'format'         => 'auto',
+                ];
+                list($transform, $aspectRatio) = $this->getTransformFromVariant($asset, $variant, 1);
+                $this->addVariantImageToModel($asset, $model, $transform, $variant, $aspectRatio);
+
             } else {
                 Craft::error(
                     'Could not create transform for: '.$asset->title
@@ -196,10 +214,16 @@ class OptimizedImages extends Component
         $useAspectRatio = $variant['useAspectRatio'] ?? true;
         if ($useAspectRatio) {
             $aspectRatio = $variant['aspectRatioX'] / $variant['aspectRatioY'];
+        }
+        // Idealy, we should get the width/height from the PDF.
+        // As for now, if using imgix and file is pdf, set a token aspectRatio to 1
+        // but ignore hight when creating immigx url
+        elseif($settings->transformMethod === 'imgix' && $asset->kind === 'pdf') {
+            $aspectRatio = 1;
         } else {
             $aspectRatio = $asset->width / $asset->height;
         }
-        $width = $variant['width'] * $retinaSize;
+       $width = $variant['width'] * $retinaSize;
         $transform->width = $width;
         $transform->height = (int)($width / $aspectRatio);
         // Image quality
@@ -270,7 +294,7 @@ class OptimizedImages extends Component
      *
      * @throws \yii\db\Exception
      */
-    public function updateOptimizedImageFieldData(Field $field, ElementInterface $asset)
+     public function updateOptimizedImageFieldData(Field $field, ElementInterface $asset)
     {
         /** @var Asset $asset */
         if ($asset instanceof Asset && $field instanceof OptimizedImagesField) {
@@ -378,7 +402,7 @@ class OptimizedImages extends Component
      *
      * @param int $id
      */
-    public function resaveAsset(int $id)
+     public function resaveAsset(int $id)
     {
         $queue = Craft::$app->getQueue();
         $jobId = $queue->push(new ResaveOptimizedImages([

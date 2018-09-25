@@ -64,6 +64,15 @@
             value: settings.imgixSecurityToken,
             warning: configWarning('imgixSecurityToken', 'image-optimize'),
         }) }}
+        <!-- imgixAllowPdfs -->
+        {{ forms.lightswitchField({
+            label: "Allow PDF images"|t('image-optimize'),
+            instructions: "Imgix supports PDFs as source images. Turn this on if you need to upload PDFs and have the transformed in the same way as other images."|t('image-optimize'),
+            'id': 'imgixAllowPdfs',
+            'name': 'imgixAllowPdfs',
+            'on': settings.imgixAllowPdfs,
+            'warning': configWarning('imgixAllowPdfs', 'image-optimize')
+        }) }}
     </div>
     <div class="field io-method-settings io-craft-method"{% if settings.transformMethod != 'craft' %} style="display: none;"{% endif %}>
         <div class="heading">

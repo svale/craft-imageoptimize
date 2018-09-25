@@ -59,9 +59,11 @@ class Optimize extends Component
         if ($settings->transformMethod !== 'craft') {
             $asset = $event->asset;
             $transform = $event->transform;
+            // Allow PDFs to be manipulated if setting is turned on
+            $canManipulateAsImage = !ImageHelper::canManipulateAsImage(pathinfo($asset->filename, PATHINFO_EXTENSION));
+            $canManipulateAsImage = $settings->imgixAllowPdfs && $asset->kind === 'pdf';
             // If there's no transform requested, and we can't manipulate the image anyway, just return the URL
-            if ($transform === null
-                || !ImageHelper::canManipulateAsImage(pathinfo($asset->filename, PATHINFO_EXTENSION))) {
+            if ($transform === null || !$canManipulateAsImage ) {
                 $volume = $asset->getVolume();
 
                 return AssetsHelper::generateUrl($volume, $asset);
@@ -91,7 +93,7 @@ class Optimize extends Component
             );
         }
         Craft::endProfile('handleGetAssetUrlEvent', __METHOD__);
-
+        
         return $url;
     }
 
