@@ -15,15 +15,25 @@
 
 {% import "_includes/forms" as forms %}
 
-{% from "image-optimize/_includes/macros.twig" import includeJsModule %}
-{% from "image-optimize/_includes/macros.twig" import includeCssModule %}
-
 {% do view.registerAssetBundle("nystudio107\\imageoptimize\\assetbundles\\imageoptimize\\ImageOptimizeAsset") %}
 {% do view.registerAssetBundle("nystudio107\\imageoptimize\\assetbundles\\optimizedimagesfield\\OptimizedImagesFieldAsset") %}
 
-{{ includeCssModule("imageoptimize") }}
+{{ craft.imageOptimize.includeCssModule("styles.css") }}
 
 <div class="field" id="{{ id }}-fields">
+    {{ forms.checkboxSelectField({
+        label: "Ignore Files"|t('image-optimize'),
+        instructions: "Don't create image transforms for files that are of the following types:"|t('image-optimize'),
+        id: 'ignoreFilesOfType',
+        name: 'ignoreFilesOfType',
+        options: {
+            'image/svg': 'SVG'|t('image-optimize'),
+            'image/gif': 'GIF'|t('image-optimize'),
+        },
+        values: field.ignoreFilesOfType,
+        warning: false,
+        errors: field.getErrors("ignoreFilesOfType"),
+    }) }}
     <!-- displayOptimizedImageVariants -->
     {{ forms.lightswitchField({
         label: "Display Optimized Image Variants"|t('image-optimize'),

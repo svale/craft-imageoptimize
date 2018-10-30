@@ -14,6 +14,7 @@ use nystudio107\imageoptimize\ImageOptimize;
 
 use craft\elements\Asset;
 use craft\helpers\ArrayHelper;
+use craft\helpers\Assets as AssetsHelper;
 use craft\helpers\UrlHelper;
 use craft\models\AssetTransform;
 
@@ -27,7 +28,7 @@ use Craft;
  * @package   ImageOptimize
  * @since     1.0.0
  */
-class ImgixImageTransform extends ImageTransform implements ImageTransformInterface
+class ImgixImageTransform extends ImageTransform
 {
     // Constants
     // =========================================================================
@@ -162,11 +163,14 @@ class ImgixImageTransform extends ImageTransform implements ImageTransformInterf
     }
 
     /**
-     * @param string $url
+     * @param string              $url
+     * @param Asset               $asset
+     * @param AssetTransform|null $transform
+     * @param array               $params
      *
      * @return string
      */
-    public static function getWebPUrl(string $url): string
+    public static function getWebPUrl(string $url, Asset $asset, $transform, array $params = []): string
     {
         $url = preg_replace('/fm=[^&]*/', 'fm=webp', $url);
 
@@ -258,5 +262,20 @@ class ImgixImageTransform extends ImageTransform implements ImageTransformInterf
         ];
 
         return $params;
+    }
+
+    /**
+     * @param Asset $asset
+     *
+     * @return mixed
+     * @throws \yii\base\InvalidConfigException
+     */
+    public static function getAssetUri(Asset $asset)
+    {
+        $volume = $asset->getVolume();
+        $assetUrl = AssetsHelper::generateUrl($volume, $asset);
+        $assetUri = parse_url($assetUrl, PHP_URL_PATH);
+
+        return $assetUri;
     }
 }

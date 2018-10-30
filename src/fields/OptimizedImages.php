@@ -26,6 +26,8 @@ use yii\base\InvalidConfigException;
 use yii\db\Exception;
 use yii\db\Schema;
 
+use verbb\supertable\fields\SuperTableField;
+
 /** @noinspection MissingPropertyAnnotationsInspection */
 
 /**
@@ -55,6 +57,11 @@ class OptimizedImages extends Field
 
     // Public Properties
     // =========================================================================
+
+    /**
+     * @var array
+     */
+    public $ignoreFilesOfType = [];
 
     /**
      * @var bool
@@ -221,7 +228,7 @@ class OptimizedImages extends Field
     public function getSettingsHtml()
     {
         $namespace = Craft::$app->getView()->getNamespace();
-        if (strpos($namespace, Matrix::class) !== false) {
+        if (strpos($namespace, Matrix::class) !== false || strpos($namespace, SuperTableField::class) !== false) {
             // Render an error template, since the field only works when attached to an Asset
             try {
                 return Craft::$app->getView()->renderTemplate(
