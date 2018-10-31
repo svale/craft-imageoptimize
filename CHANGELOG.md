@@ -1,5 +1,35 @@
 # ImageOptimize Changelog
 
+## 1.4.43 - 2018.10.29
+### Changed
+* Fix Thumbor focal point order
+* Fix a regression that broke images in sub-folders for Imgix
+
+## 1.4.42 - 2018.10.15
+### Added
+* Added the ability to have OptimizedImages fields ignore `SVG` and/or `GIF` files
+* Added support [Thumbor](http://thumbor.org/) resizing service
+
+## 1.4.41 - 2018.10.11
+### Changed
+* Fixed an issue where volumes with sub-folders such as Amazon S3 or Google Cloud didn't generate the correct URLs
+* Fixed the build process so it will no longer look for `devServer` on installs
+* Added a link to the **variant does not exist** to aid in diagnosing what is wrong 
+* Changed the signature of `::getWebPUrl()` to send in all of the transform params
+
+## 1.4.40 - 2018.10.05
+### Added
+* Add Super Table conditional for field
+
+### Changed
+* Updated build process
+
+## 1.4.39 - 2018.09.25
+### Changed
+* Added a try/catch around ColorThief, to catch errors thrown due to empty/transparent images
+* Fix a regression that could cause Optimized Images to not be generated correctly
+* Modernized package.json and webpack build
+
 ## 1.4.38 - 2018.08.20
 ### Changed
 * Fixed an incompatibility with the Spoon plugin by removing `matrix-field` class from field type settings
