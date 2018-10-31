@@ -114,10 +114,7 @@
                                     <text x="{{ thisWidth / 2 }}" y="{{ lineY + 4 }}" text-anchor="middle" fill="{{ thisStrokeColor }}">{{ retinaWidth }}w</text>
                                 </svg>
 
-                                {%  set aspectRatioText = variant.aspectRatioX ~ ':' ~ variant.aspectRatioY %}
-                                {% if useAspectRatio != true %}
-                                    {% set aspectRatioText = 'N/A' %}
-                                {% endif %}
+                                {% set aspectRatioText = variant.aspectRatioX ~ ':' ~ variant.aspectRatioY %}
                                 {% if imageSource |length and thisFileSize != -1 and thisUrl |length %}
                                     {% set imageClass = "io-normal-image" %}
                                     {% if imageSource == value.optimizedWebPImageUrls %}
@@ -141,12 +138,11 @@
                                         {% set thisFormat = variant.format %}
                                     {% endif %}
                                     {% if imageSource == value.optimizedWebPImageUrls %}
-                                        {% set thisFormat = ".webp" %}
+                                        {% set thisFormat = "webp" %}
                                     {% endif %}
                                     <div style="text-align: center; padding-top: 10px;">
                                         <span style="text-transform: uppercase; color: {{ thisStrokeColor }}">
-                                            {{ aspectRatioText }}
-                                            &middot;
+                                            {{ useAspectRatio ? aspectRatioText ~ '&middot;' }}
                                             {{ thisFormat }}
                                             &middot;
                                             {{ thisFileSize }}
@@ -163,7 +159,7 @@
                                             <rect fill="{{ thisFillColor }}" x="0" y="0" width="{{ thisWidth }}" height="{{ thisHeight }}" stroke="{{ thisStrokeColor }}" stroke-width="4">
                                             </rect>
                                             <text x="{{ thisWidth / 2 }}" y="{{ thisHeight / 2 }}" fill="{{ thisStrokeColor }}" text-anchor="middle" alignment-baseline="central" font-size="{{ thisFontSize }}">
-                                                {{ aspectRatioText }}
+                                                {{ useAspectRatio ? aspectRatioText }}
                                             </text>
                                         </svg>
                                     </div>
@@ -172,7 +168,7 @@
                                             {% if thisUrl | length %}
                                                 <a href="{{ thisUrl ~ cacheBustString }}" target="_blank">
                                             {% endif %}
-                                            {% set thisFormat = thisUrl |split('.') |last %}
+                                            {% set thisFormat = thisUrl |split('?') |first |split('.') |last  %}
                                             <span class="warning" title="{{ thisFormat ~ (errorMessage |t('image-optimize')) }}" data-icon="alert"></span>
                                             <span style="text-transform: uppercase;">{{ thisFormat }}</span> {{ errorMessage |t('image-optimize') }}
                                             {% if thisUrl | length %}
