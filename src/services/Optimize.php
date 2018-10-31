@@ -59,9 +59,10 @@ class Optimize extends Component
         if ($settings->transformMethod !== 'craft') {
             $asset = $event->asset;
             $transform = $event->transform;
-            // Allow PDFs to be manipulated if setting is turned on
-            $canManipulateAsImage = !ImageHelper::canManipulateAsImage(pathinfo($asset->filename, PATHINFO_EXTENSION));
-            $canManipulateAsImage = $settings->imgixAllowPdfs && $asset->kind === 'pdf';
+
+            // Can we manipulated file type?  Allow PDFs to be manipulated if setting is turned on
+            $canManipulateAsImage = (ImageHelper::canManipulateAsImage(pathinfo($asset->filename, PATHINFO_EXTENSION))) || ($settings->imgixAllowPdfs && $asset->kind === 'pdf');
+
             // If there's no transform requested, and we can't manipulate the image anyway, just return the URL
             if ($transform === null || !$canManipulateAsImage ) {
                 $volume = $asset->getVolume();
