@@ -11,6 +11,7 @@
 namespace nystudio107\imageoptimize\variables;
 
 use nystudio107\imageoptimize\ImageOptimize;
+use nystudio107\imageoptimize\imagetransforms\ImageTransformInterface;
 use nystudio107\imageoptimize\models\OptimizedImage;
 
 use craft\elements\Asset;
@@ -21,7 +22,7 @@ use craft\helpers\Template;
  * @package   ImageOptimize
  * @since     1.4.0
  */
-class ImageOptimizeVariable
+class ImageOptimizeVariable extends ManifestVariable
 {
     // Public Methods
     // =========================================================================
@@ -74,5 +75,18 @@ class ImageOptimizeVariable
         }
 
         return $result;
+    }
+
+    /**
+     * Creates an Image Transform with a given config.
+     *
+     * @param mixed $config The Image Transform’s class name, or its config,
+     *                      with a `type` value and optionally a `settings` value
+     *
+     * @return null|ImageTransformInterface The Image Transform
+     */
+    public function createImageTransformType($config): ImageTransformInterface
+    {
+        return ImageOptimize::$plugin->optimize->createImageTransformType($config);
     }
 }

@@ -1,10 +1,60 @@
 # ImageOptimize Changelog
 
+## 1.5.1 - 2018.12.28
+### Changed
+* Refactored the Imgix and Thumbor Image Transforms out to external packages
+
+## 1.5.0 - 2018.12.27
+### Changed
+* Refactored out the `ImageTransform` interface to use Yii2's DI to allow them to be stand-alone components
+* Respond to `Assets::EVENT_GET_ASSET_THUMB_URL` for direct thumbnail generation from third party image transform services
+
+## 1.4.45 - 2018.11.28
+### Changed
+* Call `App::maxPowerCaptain()` whenever a queue is manually run (both via web and console request)
+* Minor Thumbor fixes
+
+## 1.4.44 - 2018.11.18
+### Changed
+* Default format and quality to null so they can be omitted if you're generating transforms via Twig
+* Fix an issue with Imgix with images that have no focal point set
+
+## 1.4.43 - 2018.11.05
+### Changed
+* Fix Thumbor focal point order
+* Fix a regression that broke images in sub-folders for Imgix
+* Retooled the JavaScript build system to be more compatible with edge case server setups
+
+## 1.4.42 - 2018.10.15
+### Added
+* Added the ability to have OptimizedImages fields ignore `SVG` and/or `GIF` files
+* Added support [Thumbor](http://thumbor.org/) resizing service
+
+## 1.4.41 - 2018.10.11
+### Changed
+* Fixed an issue where volumes with sub-folders such as Amazon S3 or Google Cloud didn't generate the correct URLs
+* Fixed the build process so it will no longer look for `devServer` on installs
+* Added a link to the **variant does not exist** to aid in diagnosing what is wrong 
+* Changed the signature of `::getWebPUrl()` to send in all of the transform params
+
+## 1.4.40 - 2018.10.05
+### Added
+* Add Super Table conditional for field
+
+### Changed
+* Updated build process
+
+## 1.4.39 - 2018.09.25
+### Changed
+* Added a try/catch around ColorThief, to catch errors thrown due to empty/transparent images
+* Fix a regression that could cause Optimized Images to not be generated correctly
+* Modernized package.json and webpack build
+
 ## 1.4.38 - 2018.08.20
 ### Changed
 * Fixed an incompatibility with the Spoon plugin by removing `matrix-field` class from field type settings
 * Fixed an erroneous 2:2 aspect ratio in the default settings
-* Moved to a modern webpack build config for the AdminCP
+* Moved to a modern webpack build config for the Control Panel
 * Added install confetti
 
 ## 1.4.37 - 2018.08.09
@@ -139,7 +189,7 @@
 
 ## 1.4.14 - 2018.02.09
 ### Changed
-* Fixed an issue where certain settings could not be saved via the AdminCP
+* Fixed an issue where certain settings could not be saved via the Control Panel
 * Check to ensure that `GD` is installed before attempting to generate silhouette placeholders
 * Show a warning on the Settings page if `GD` is not installed
 
@@ -160,7 +210,7 @@
 ### Added
 * Shows an error if an OptimizedImages field is added to anything other than an Asset's layout
 * Added a warning if a config setting is being overridden by the `config.php`
-* Added a number of config settings to the AdminCP GUI
+* Added a number of config settings to the Control Panel GUI
 
 ### Changed
 * `UrlHelper::urlWithProtocol` -> `UrlHelper::urlWithScheme` for Craft CMS 3 RC7 compatibility

@@ -5,35 +5,65 @@
  * Automatically optimize images after they've been transformed
  *
  * @link      https://nystudio107.com
- * @copyright Copyright (c) 2017 nystudio107
+ * @copyright Copyright (c) 2018 nystudio107
  */
 
 namespace nystudio107\imageoptimize\imagetransforms;
 
 use nystudio107\imageoptimize\helpers\UrlHelper;
 
+use craft\base\SavableComponent;
 use craft\elements\Asset;
-use craft\helpers\Assets as AssetsHelper;
+use craft\helpers\FileHelper;
+use craft\helpers\StringHelper;
 use craft\models\AssetTransform;
 
 /**
  * @author    nystudio107
  * @package   ImageOptimize
- * @since     1.0.0
+ * @since     1.5.0
  */
-abstract class ImageTransform implements ImageTransformInterface
+abstract class ImageTransform extends SavableComponent implements ImageTransformInterface
 {
-    // Public Static Methods
+    // Traits
+    // =========================================================================
+
+    use ImageTransformTrait;
+
+    // Static Methods
     // =========================================================================
 
     /**
-     * @param Asset               $asset
-     * @param AssetTransform|null $transform
-     * @param array               $params
-     *
-     * @return string|null
+     * @inheritdoc
      */
-    public static function getTransformUrl(Asset $asset, $transform, array $params = [])
+    public static function displayName(): string
+    {
+        return Craft::t('image-optimize', 'Generic Transform');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function getTemplatesRoot(): array
+    {
+        $reflect = new \ReflectionClass(static::class);
+        $classPath = FileHelper::normalizePath(
+            dirname($reflect->getFileName())
+            . '/../templates'
+        )
+        . DIRECTORY_SEPARATOR;
+        $id = StringHelper::toKebabCase($reflect->getShortName());
+
+        return [$id, $classPath];
+    }
+
+    // Public Methods
+    // =========================================================================
+
+    /**
+     * @inheritdoc
+     */
+    public function getTransformUrl(Asset $asset, $transform, array $params = [])
     {
         $url = null;
 
@@ -41,22 +71,17 @@ abstract class ImageTransform implements ImageTransformInterface
     }
 
     /**
-     * @param string $url
-     *
-     * @return string
+     * @inheritdoc
      */
-    public static function getWebPUrl(string $url): string
+    public function getWebPUrl(string $url, Asset $asset, $transform, array $params = []): string
     {
         return $url;
     }
 
     /**
-     * @param Asset $asset
-     * @param array $params
-     *
-     * @return null|string
+     * @inheritdoc
      */
-    public static function getPurgeUrl(Asset $asset, array $params = [])
+    public function getPurgeUrl(Asset $asset, array $params = [])
     {
         $url = null;
 
@@ -64,46 +89,34 @@ abstract class ImageTransform implements ImageTransformInterface
     }
 
     /**
-     * @param string $url
-     * @param array  $params
-     *
-     * @return bool
+     * @inheritdoc
      */
-    public static function purgeUrl(string $url, array $params = []): bool
+    public function purgeUrl(string $url, array $params = []): bool
     {
         return true;
     }
 
     /**
-     * @return array
+     * @inheritdoc
      */
-    public static function getTransformParams(): array
-    {
-        $params = [
-        ];
-
-        return $params;
-    }
-
-    /**
-     * @param Asset $asset
-     *
-     * @return mixed
-     * @throws \yii\base\InvalidConfigException
-     */
-    public static function getAssetUri(Asset $asset)
+    public function getAssetUri(Asset $asset)
     {
         $volume = $asset->getVolume();
-        $assetUrl = AssetsHelper::generateUrl($volume, $asset);
-        $assetUri = parse_url($assetUrl, PHP_URL_PATH);
+        $assetPath = $asset->getPath();
 
-        return $assetUri;
+        // Account for volume types with a subfolder setting
+        // e.g. craftcms/aws-s3, craftcms/google-cloud
+        if ($volume->subfolder ?? null) {
+            return rtrim($volume->subfolder, '/').'/'.$assetPath;
+        }
+
+        return $assetPath;
     }
 
     /**
      * @param string $url
      */
-    public static function prefetchRemoteFile($url)
+    public function prefetchRemoteFile($url)
     {
         // Get an absolute URL with protocol that curl will be happy with
         $url = UrlHelper::absoluteUrlWithProtocol($url);
@@ -119,6 +132,17 @@ abstract class ImageTransform implements ImageTransformInterface
     }
 
     /**
+     * @inheritdoc
+     */
+    public function getTransformParams(): array
+    {
+        $params = [
+        ];
+
+        return $params;
+    }
+
+    /**
      * Append an extension a passed url or path
      *
      * @param $pathOrUrl
@@ -126,9 +150,9 @@ abstract class ImageTransform implements ImageTransformInterface
      *
      * @return string
      */
-    public static function appendExtension($pathOrUrl, $extension): string
+    public function appendExtension($pathOrUrl, $extension): string
     {
-        $path = self::decomposeUrl($pathOrUrl);
+        $path = $this->decomposeUrl($pathOrUrl);
         $path_parts = pathinfo($path['path']);
         $new_path = $path_parts['filename'] . '.' . $path_parts['extension'] . $extension;
         if (!empty($path_parts['dirname']) && $path_parts['dirname'] !== '.') {
@@ -150,7 +174,7 @@ abstract class ImageTransform implements ImageTransformInterface
      *
      * @return array
      */
-    protected static function decomposeUrl($pathOrUrl): array
+    protected function decomposeUrl($pathOrUrl): array
     {
         $result = array();
 

@@ -1,11 +1,13 @@
 {
-  "vendors~confetti~vue.js": "/cpresources/imageoptimize/js/vendors~confetti~vue.e4b60206a8f8df1d6205.js",
-  "vendors~confetti~vue.js.map": "/cpresources/imageoptimize/js/vendors~confetti~vue.e4b60206a8f8df1d6205.js.map",
-  "imageoptimize.js": "/cpresources/imageoptimize/js/imageoptimize.52dcad1fda30bcf8f06a.js",
-  "imageoptimize.js.map": "/cpresources/imageoptimize/js/imageoptimize.52dcad1fda30bcf8f06a.js.map",
-  "welcome.js": "/cpresources/imageoptimize/js/welcome.9c8cfc57b4d4eb4baedf.js",
-  "welcome.js.map": "/cpresources/imageoptimize/js/welcome.9c8cfc57b4d4eb4baedf.js.map",
-  "confetti.js": "/cpresources/imageoptimize/js/confetti.47ab93946f55559f9b04.js",
-  "confetti.js.map": "/cpresources/imageoptimize/js/confetti.47ab93946f55559f9b04.js.map",
-  "../../../templates/_includes/include-modern-module.twig": "/cpresources/imageoptimize/../../../templates/_includes/include-modern-module.twig"
+  "imageoptimize.js": "js/imageoptimize.js",
+  "imageoptimize.js.map": "js/imageoptimize.js.map",
+  "styles.css": "css/styles.css",
+  "styles.js": "js/styles.js",
+  "styles.js.map": "js/styles.js.map",
+  "vendor.js": "js/vendor.js",
+  "vendor.js.map": "js/vendor.js.map",
+  "welcome.js": "js/welcome.js",
+  "welcome.js.map": "js/welcome.js.map",
+  "css/styles.css.map": "css/styles.css.map",
+  "img/ImageOptimize-icon.svg": "img/ImageOptimize-icon.svg"
 }
