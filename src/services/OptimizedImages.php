@@ -377,8 +377,11 @@ class OptimizedImages extends Component
         $useAspectRatio = $variant['useAspectRatio'] ?? true;
         if ($useAspectRatio) {
             $aspectRatio = $variant['aspectRatioX'] / $variant['aspectRatioY'];
-        } else {
+        } else if ($asset->width && $asset->height) {
             $aspectRatio = $asset->width / $asset->height;
+        } else { // fallback to default
+            list($aspectRatioX, $aspectRatioY) = array_values($settings->defaultAspectRatios[0]);
+            $aspectRatio = $aspectRatioX / $aspectRatioY;
         }
         $width = $variant['width'] * $retinaSize;
         $transform->width = $width;

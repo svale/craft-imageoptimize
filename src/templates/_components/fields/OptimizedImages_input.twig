@@ -82,7 +82,7 @@
                                 {% set thisFileSize = value.getRemoteFileSize(thisUrl) %}
                                 {% set aspectRatio = variant.aspectRatioX / variant.aspectRatioY %}
                                 {% set useAspectRatio = variant.useAspectRatio ?? true %}
-                                {% if useAspectRatio != true %}
+                                {% if useAspectRatio != true and value.originalImageWidth and value.originalImageHeight %}
                                     {% set aspectRatio = value.originalImageWidth / value.originalImageHeight %}
                                 {% endif %}
                                 {% set thisWidth = (realWidth * 200) / maxWidth %}
