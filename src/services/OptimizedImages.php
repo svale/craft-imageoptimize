@@ -35,6 +35,7 @@ class OptimizedImages extends Component
 {
     // Constants
     // =========================================================================
+    const KIND_IMAGE = 'image';
 
     // Public Properties
     // =========================================================================
@@ -335,7 +336,7 @@ class OptimizedImages extends Component
     {
         Craft::beginProfile('generatePlaceholders', __METHOD__);
         $settings = ImageOptimize::$plugin->getSettings();
-        if ($settings->generatePlaceholders && ImageOptimize::$generatePlaceholders) {
+        if ($element->kind === self::KIND_IMAGE && $settings->generatePlaceholders && ImageOptimize::$generatePlaceholders) {
             $placeholder = ImageOptimize::$plugin->placeholder;
             if ($element->focalPoint) {
                 $position = $element->getFocalPoint();
