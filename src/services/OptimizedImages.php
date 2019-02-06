@@ -22,7 +22,6 @@ use craft\base\Field;
 use craft\base\Volume;
 use craft\elements\Asset;
 use craft\errors\SiteNotFoundException;
-use craft\helpers\Image;
 use craft\helpers\Json;
 use craft\models\AssetTransform;
 use craft\models\FieldLayout;
@@ -90,9 +89,8 @@ class OptimizedImages extends Component
             foreach ($retinaSizes as $retinaSize) {
                 $finalFormat = empty($variant['format']) ? $asset->getExtension() : $variant['format'];
                 // Only try the transform if it's possible
-                if (Image::canManipulateAsImage($finalFormat)
-                    && Image::canManipulateAsImage($asset->getExtension())
-                    && $asset->height > 0) {
+                if (ImageOptimize::$plugin->transformMethod->canManipulateAsImage($finalFormat, $asset->height)
+                    && ImageOptimize::$plugin->transformMethod->canManipulateAsImage($asset->getExtension(), $asset->height)) {
                     // Create the transform based on the variant
                     list($transform, $aspectRatio) = $this->getTransformFromVariant($asset, $variant, $retinaSize);
                     // Only create the image variant if it is not upscaled, or they are okay with it being up-scaled
@@ -106,7 +104,7 @@ class OptimizedImages extends Component
                         'Could not create transform for: '.$asset->title
                         .' - Final format: '.$finalFormat
                         .' - Element extension: '.$asset->getExtension()
-                        .' - canManipulateAsImage: '.Image::canManipulateAsImage($asset->getExtension()),
+                        .' - canManipulateAsImage: '.ImageOptimize::$plugin->transformMethod->canManipulateAsImage($asset->getExtension(), $asset->height),
                         __METHOD__
                     );
                 }
@@ -116,9 +114,7 @@ class OptimizedImages extends Component
         // If no image variants were created, populate it with the image itself
         if (empty($model->optimizedImageUrls)) {
             $finalFormat = $asset->getExtension();
-            if (Image::canManipulateAsImage($finalFormat)
-                && Image::canManipulateAsImage($finalFormat)
-                && $asset->height > 0) {
+            if (ImageOptimize::$plugin->transformMethod->canManipulateAsImage($finalFormat, $asset->height)) {
                 $variant = [
                     'width' => $asset->width,
                     'useAspectRatio' => false,
@@ -135,7 +131,7 @@ class OptimizedImages extends Component
                     'Could not create transform for: '.$asset->title
                     .' - Final format: '.$finalFormat
                     .' - Element extension: '.$asset->getExtension()
-                    .' - canManipulateAsImage: '.Image::canManipulateAsImage($asset->getExtension()),
+                    .' - canManipulateAsImage: '.ImageOptimize::$plugin->transformMethod->canManipulateAsImage($asset->getExtension(), $asset->height),
                     __METHOD__
                 );
             }

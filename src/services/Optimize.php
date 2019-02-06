@@ -31,7 +31,6 @@ use craft\events\RegisterComponentTypesEvent;
 use craft\helpers\Component as ComponentHelper;
 use craft\helpers\FileHelper;
 use craft\helpers\Assets as AssetsHelper;
-use craft\helpers\Image as ImageHelper;
 use craft\image\Raster;
 use craft\models\AssetTransform;
 use craft\models\AssetTransformIndex;
@@ -145,7 +144,7 @@ class Optimize extends Component
             $transform = $event->transform;
             // If there's no transform requested, and we can't manipulate the image anyway, just return the URL
             if ($transform === null
-                || !ImageHelper::canManipulateAsImage(pathinfo($asset->filename, PATHINFO_EXTENSION))) {
+                || !ImageOptimize::$plugin->transformMethod->canManipulateAsImage(pathinfo($asset->filename, PATHINFO_EXTENSION), $asset->height)) {
                 $volume = $asset->getVolume();
 
                 return AssetsHelper::generateUrl($volume, $asset);
@@ -192,7 +191,7 @@ class Optimize extends Component
         $url = null;
         if (!ImageOptimize::$plugin->transformMethod instanceof CraftImageTransform) {
             $asset = $event->asset;
-            if (ImageHelper::canManipulateAsImage($asset->getExtension())) {
+            if (ImageOptimize::$plugin->transformMethod->canManipulateAsImage($asset->getExtension(), $asset->height)) {
                 $transform = new AssetTransform([
                     'height' => $event->height,
                     'width' => $event->width,

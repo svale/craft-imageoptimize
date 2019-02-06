@@ -101,4 +101,12 @@ interface ImageTransformInterface extends SavableComponentInterface
      * @return array
      */
     public function getTransformParams(): array;
+
+    /**
+     * Returns whether an image extension is considered manipulatable.
+     *
+     * @return bool
+     */
+    public function canManipulateAsImage(string $extension, $height): bool;
+
 }

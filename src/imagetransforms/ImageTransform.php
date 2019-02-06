@@ -16,6 +16,7 @@ use craft\base\SavableComponent;
 use craft\elements\Asset;
 use craft\helpers\FileHelper;
 use craft\helpers\StringHelper;
+use craft\helpers\Image;
 use craft\models\AssetTransform;
 
 /**
@@ -162,6 +163,18 @@ abstract class ImageTransform extends SavableComponent implements ImageTransform
         $output = $path['prefix'] . $new_path . $path['suffix'];
 
         return $output;
+    }
+
+    /**
+     * Returns whether an image extension is considered manipulatable.
+     *
+     * @param string $extension
+     * @param mixed|int|null height
+     * @return bool
+     */
+    public function canManipulateAsImage(string $extension, $height): bool
+    {
+        return $height > 0 && Image::canManipulateAsImage($extension);
     }
 
     // Protected Methods

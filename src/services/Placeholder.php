@@ -17,7 +17,6 @@ use Craft;
 use craft\base\Component;
 use craft\elements\Asset;
 use craft\errors\ImageException;
-use craft\helpers\Image;
 use craft\helpers\StringHelper;
 use craft\image\Raster;
 
@@ -200,7 +199,7 @@ class Placeholder extends Component
     {
         $tempPath = '';
 
-        if ($asset !== null && Image::canManipulateAsImage($asset->getExtension())) {
+        if ($asset !== null && ImageOptimize::$plugin->transformMethod->canManipulateAsImage($asset->getExtension(), $asset->height)) {
             $imageSource = $asset->getTransformSource();
             // Scale and crop the placeholder image
             $tempPath = $this->createImageFromPath($imageSource, $width, $height, $quality, $position);
