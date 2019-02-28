@@ -1,5 +1,17 @@
 # ImageOptimize Changelog
 
+## 1.5.4 - 2019.02.22
+### Changed
+* Fixed an issue where focal points weren't always respected for Imgix
+
+## 1.5.3 - 2019.02.07
+### Changed
+* Fixed an issue where `.env` vars were not actually parsed
+
+## 1.5.2 - 2019.02.07
+### Changed
+* If you're using Craft 3.1, ImageOptimize will use Craft [environmental variables](https://docs.craftcms.com/v3/config/environments.html#control-panel-settings) for secrets
+
 ## 1.5.1 - 2018.12.28
 ### Changed
 * Refactored the Imgix and Thumbor Image Transforms out to external packages
