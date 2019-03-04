@@ -196,7 +196,8 @@ Craft.OptimizedImagesInput = Garnish.Base.extend(
         },
 
         addAspectRatioHandlers: function () {
-            this.addListener($('.lightswitch'), 'click', function(ev) {
+            // not very great way of listening to only this lightswitch. class-prop in form macro would help
+            this.addListener($('.fields > .field > .input > .lightswitch'), 'click', function(ev) {
                 var $target = $(ev.target);
                 var $block = $target.closest('.matrixblock');
                 $block.find('.io-aspect-ratio-wrapper').slideToggle();

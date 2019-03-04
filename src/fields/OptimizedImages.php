@@ -47,6 +47,7 @@ class OptimizedImages extends Field
         [
             'width'          => 1200,
             'useAspectRatio' => true,
+            'flipAspectRatio' => false,
             'aspectRatioX'   => 16.0,
             'aspectRatioY'   => 9.0,
             'retinaSizes'    => ['1'],

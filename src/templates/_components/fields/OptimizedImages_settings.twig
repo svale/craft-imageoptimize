@@ -197,6 +197,16 @@
                                             value: field.variants[loop.index0]['aspectRatioY']
                                         }) }}
                                     </div>
+
+                                    {% set flipAspectRatio = field.variants[loop.index0]['flipAspectRatio'] ?? false %}
+                                    {{ forms.lightswitchField({
+                                        label: 'Flip aspect ratio with image orientation',
+                                        instructions: 'Inverts the aspect ration according to the image orientation. Default is landscape (X:Y), will be inverted to Y:X for portrait',
+                                        id: 'variants-' ~ loop.index0 ~ '-flipAspectRatio',
+                                        name: 'variants[' ~ loop.index0 ~ '][flipAspectRatio]',
+                                        on: flipAspectRatio
+                                    }) }}
+
                                 </div>
                             </div>
                             <!-- Retina Sizes -->

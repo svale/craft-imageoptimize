@@ -134,6 +134,7 @@ class Settings extends Model
         [
             'width'          => 1200,
             'useAspectRatio' => true,
+            'flipAspectRatio' => false,
             'aspectRatioX'   => 16.0,
             'aspectRatioY'   => 9.0,
             'retinaSizes'    => ['1'],
@@ -143,6 +144,7 @@ class Settings extends Model
         [
             'width'          => 992,
             'useAspectRatio' => true,
+            'flipAspectRatio' => false,
             'aspectRatioX'   => 16.0,
             'aspectRatioY'   => 9.0,
             'retinaSizes'    => ['1'],
@@ -152,6 +154,7 @@ class Settings extends Model
         [
             'width'          => 768,
             'useAspectRatio' => true,
+            'flipAspectRatio' =>false,
             'aspectRatioX'   => 4.0,
             'aspectRatioY'   => 3.0,
             'retinaSizes'    => ['1'],
@@ -161,6 +164,7 @@ class Settings extends Model
         [
             'width'          => 576,
             'useAspectRatio' => true,
+            'flipAspectRatio' =>false,
             'aspectRatioX'   => 4.0,
             'aspectRatioY'   => 3.0,
             'retinaSizes'    => ['1'],

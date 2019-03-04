@@ -88,6 +88,7 @@ return [
         [
             'width'          => 1200,
             'useAspectRatio' => true,
+            'flipAspectRatio' => false,
             'aspectRatioX'   => 16.0,
             'aspectRatioY'   => 9.0,
             'retinaSizes'    => ['1'],
@@ -97,6 +98,7 @@ return [
         [
             'width'          => 992,
             'useAspectRatio' => true,
+            'flipAspectRatio' => false,
             'aspectRatioX'   => 16.0,
             'aspectRatioY'   => 9.0,
             'retinaSizes'    => ['1'],
@@ -106,6 +108,7 @@ return [
         [
             'width'          => 768,
             'useAspectRatio' => true,
+            'flipAspectRatio' => false,
             'aspectRatioX'   => 4.0,
             'aspectRatioY'   => 3.0,
             'retinaSizes'    => ['1'],
@@ -115,6 +118,7 @@ return [
         [
             'width'          => 576,
             'useAspectRatio' => true,
+            'flipAspectRatio' => false,
             'aspectRatioX'   => 4.0,
             'aspectRatioY'   => 3.0,
             'retinaSizes'    => ['1'],

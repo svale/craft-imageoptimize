@@ -375,8 +375,12 @@ class OptimizedImages extends Component
         $transform = new AssetTransform();
         $transform->format = $variant['format'] ?? null;
         $useAspectRatio = $variant['useAspectRatio'] ?? true;
+        $flipAspectRatio = $variant['flipAspectRatio'] ?? false;
         if ($useAspectRatio) {
             $aspectRatio = $variant['aspectRatioX'] / $variant['aspectRatioY'];
+            if ($flipAspectRatio && $asset->width < $asset->height) {
+                $aspectRatio = $variant['aspectRatioY'] / $variant['aspectRatioX'];
+            }
         } else if ($asset->width && $asset->height) {
             $aspectRatio = $asset->width / $asset->height;
         } else { // fallback to default
