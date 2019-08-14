@@ -92,13 +92,6 @@ interface ImageTransformInterface extends SavableComponentInterface
     public function prefetchRemoteFile($url);
 
     /**
-     * Get the parameters needed for this transform
-     *
-     * @return array
-     */
-    public function getTransformParams(): array;
-
-    /**
      * Returns whether an image extension is considered manipulatable.
      *
      * @return bool
