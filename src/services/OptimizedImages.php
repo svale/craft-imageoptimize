@@ -123,7 +123,6 @@ class OptimizedImages extends Component
                     'aspectRatioY' => $asset->height,
                     'retinaSizes' => ['1'],
                     'quality' => 0,
-                    'format' => $finalFormat,
                 ];
                 list($transform, $aspectRatio) = $this->getTransformFromVariant($asset, $variant, 1);
                 $this->addVariantImageToModel($asset, $model, $transform, $variant, $aspectRatio);
@@ -350,6 +349,7 @@ class OptimizedImages extends Component
                 // Generate the color palette for the image
                 if ($settings->createColorPalette) {
                     $model->colorPalette = $placeholder->generateColorPalette($tempPath);
+                    $model->lightness = $placeholder->calculateLightness($model->colorPalette);
                 }
                 // Generate the Potrace SVG
                 if ($settings->createPlaceholderSilhouettes) {
@@ -417,8 +417,7 @@ class OptimizedImages extends Component
         // Generate an image transform url
         $url = ImageOptimize::$plugin->transformMethod->getTransformUrl(
             $asset,
-            $transform,
-            ImageOptimize::$transformParams
+            $transform
         );
         Craft::info(
             'URL created: '.print_r($url, true),
@@ -435,8 +434,7 @@ class OptimizedImages extends Component
             $webPUrl = ImageOptimize::$plugin->transformMethod->getWebPUrl(
                 $url,
                 $asset,
-                $transform,
-                ImageOptimize::$transformParams
+                $transform
             );
             //ImageOptimize::$plugin->transformMethod->prefetchRemoteFile($webPUrl);
             $model->optimizedWebPImageUrls[$transform->width] = $webPUrl;

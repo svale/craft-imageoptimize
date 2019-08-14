@@ -22,7 +22,7 @@ use craft\models\AssetTransform;
 /**
  * @author    nystudio107
  * @package   ImageOptimize
- * @since     1.5.0
+ * @since     1.6.0
  */
 abstract class ImageTransform extends SavableComponent implements ImageTransformInterface
 {
@@ -64,7 +64,7 @@ abstract class ImageTransform extends SavableComponent implements ImageTransform
     /**
      * @inheritdoc
      */
-    public function getTransformUrl(Asset $asset, $transform, array $params = [])
+    public function getTransformUrl(Asset $asset, $transform)
     {
         $url = null;
 
@@ -74,7 +74,7 @@ abstract class ImageTransform extends SavableComponent implements ImageTransform
     /**
      * @inheritdoc
      */
-    public function getWebPUrl(string $url, Asset $asset, $transform, array $params = []): string
+    public function getWebPUrl(string $url, Asset $asset, $transform): string
     {
         return $url;
     }
@@ -82,7 +82,7 @@ abstract class ImageTransform extends SavableComponent implements ImageTransform
     /**
      * @inheritdoc
      */
-    public function getPurgeUrl(Asset $asset, array $params = [])
+    public function getPurgeUrl(Asset $asset)
     {
         $url = null;
 
@@ -92,7 +92,7 @@ abstract class ImageTransform extends SavableComponent implements ImageTransform
     /**
      * @inheritdoc
      */
-    public function purgeUrl(string $url, array $params = []): bool
+    public function purgeUrl(string $url): bool
     {
         return true;
     }
@@ -133,17 +133,6 @@ abstract class ImageTransform extends SavableComponent implements ImageTransform
     }
 
     /**
-     * @inheritdoc
-     */
-    public function getTransformParams(): array
-    {
-        $params = [
-        ];
-
-        return $params;
-    }
-
-    /**
      * Append an extension a passed url or path
      *
      * @param $pathOrUrl
@@ -155,7 +144,7 @@ abstract class ImageTransform extends SavableComponent implements ImageTransform
     {
         $path = $this->decomposeUrl($pathOrUrl);
         $path_parts = pathinfo($path['path']);
-        $new_path = $path_parts['filename'] . '.' . $path_parts['extension'] . $extension;
+        $new_path = ($path_parts['filename'] ?? '') . '.' . ($path_parts['extension'] ?? '') . $extension;
         if (!empty($path_parts['dirname']) && $path_parts['dirname'] !== '.') {
             $new_path = $path_parts['dirname'] . DIRECTORY_SEPARATOR . $new_path;
             $new_path = preg_replace('/([^:])(\/{2,})/', '$1/', $new_path);
