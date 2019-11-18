@@ -194,7 +194,6 @@ class Optimize extends Component
             $asset = $event->asset;
             if (ImageOptimize::$plugin->transformMethod->canManipulateAsImage($asset->getExtension(), $asset->height)) {
                 $transform = new AssetTransform([
-                    'height' => $event->height,
                     'width' => $event->width,
                     'interlace' => 'line',
                 ]);

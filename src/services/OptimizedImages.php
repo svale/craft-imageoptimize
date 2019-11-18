@@ -12,6 +12,7 @@ namespace nystudio107\imageoptimize\services;
 
 use nystudio107\imageoptimize\ImageOptimize;
 use nystudio107\imageoptimize\fields\OptimizedImages as OptimizedImagesField;
+use nystudio107\imageoptimize\helpers\Image as ImageHelper;
 use nystudio107\imageoptimize\models\OptimizedImage;
 use nystudio107\imageoptimize\jobs\ResaveOptimizedImages;
 
@@ -21,10 +22,12 @@ use craft\base\ElementInterface;
 use craft\base\Field;
 use craft\base\Volume;
 use craft\elements\Asset;
+use craft\errors\ImageException;
 use craft\errors\SiteNotFoundException;
 use craft\helpers\Json;
 use craft\models\AssetTransform;
 use craft\models\FieldLayout;
+use yii\base\InvalidConfigException;
 
 /**
  * @author    nystudio107
@@ -147,12 +150,36 @@ class OptimizedImages extends Component
      * @param ElementInterface $asset
      *
      * @throws \yii\db\Exception
+     * @throws InvalidConfigException
      */
     public function updateOptimizedImageFieldData(Field $field, ElementInterface $asset)
     {
         /** @var Asset $asset */
         if ($asset instanceof Asset && $field instanceof OptimizedImagesField) {
             $createVariants = true;
+            Craft::info(print_r($field->fieldVolumeSettings, true), __METHOD__);
+            // See if we're ignoring files in this dir
+            if (!empty($field->fieldVolumeSettings)) {
+                foreach ($field->fieldVolumeSettings as $volumeHandle => $subfolders) {
+                    if ($asset->getVolume()->handle === $volumeHandle) {
+                        if (is_string($subfolders) && $subfolders === '*') {
+                            $createVariants = true;
+                            Craft::info("Matched '*' wildcard ", __METHOD__);
+                        } else {
+                            $createVariants = false;
+                            if (is_array($subfolders)) {
+                                foreach ($subfolders as $subfolder) {
+                                    if ($asset->getFolder()->uid === $subfolder) {
+                                        Craft::info('Matched subfolder uid: '.print_r($subfolder, true), __METHOD__);
+                                        $createVariants = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // See if we should ignore this type of file
             $sourceType = $asset->getMimeType();
             if (!empty($field->ignoreFilesOfType) && $sourceType !== null) {
                 if (\in_array($sourceType, array_values($field->ignoreFilesOfType), false)) {
@@ -374,6 +401,20 @@ class OptimizedImages extends Component
         $settings = ImageOptimize::$plugin->getSettings();
         $transform = new AssetTransform();
         $transform->format = $variant['format'] ?? null;
+        // Handle animate .gif images by never changing the format
+        $images = Craft::$app->getImages();
+        if ($asset->extension === 'gif' && !$images->getIsGd()) {
+            $imageSource = $asset->getTransformSource();
+            try {
+                if (ImageHelper::getIsAnimatedGif($imageSource)) {
+                    $transform->format = null;
+                }
+            } catch (ImageException $e) {
+                Craft::error($e->getMessage(), __METHOD__);
+            } catch (InvalidConfigException $e) {
+                Craft::error($e->getMessage(), __METHOD__);
+            }
+        }
         $useAspectRatio = $variant['useAspectRatio'] ?? true;
         $flipAspectRatio = $variant['flipAspectRatio'] ?? false;
         if ($useAspectRatio) {

@@ -1,5 +1,26 @@
 # ImageOptimize Changelog
 
+## 1.6.5 - 2019.11.13
+### Added
+* Added the ability to choose the sub-folders in an asset volume in which Optimized Image Variants will be created
+
+### Changed
+* Parse volumes sub-folders as environment variables
+
+## 1.6.4 - 2019.10.31
+### Changed
+* If an image is an animated `.gif` file, never change the file format
+
+## 1.6.3 - 2019.10.24
+### Changed
+* Force update to `"nystudio107/craft-imageoptimize-imgix": "^1.1.1"`
+* Fixed aspect ratio for CP thumbnail images
+* Default `createPlaceholderSilhouettes` to `false` so people need to enable this setting if they want to use them (they can be on the larger side)
+
+## 1.6.2 - 2019.09.25
+### Changed
+* Added support for native GraphQL in Craft 3.3
+
 ## 1.6.1 - 2019.08.13
 ### Changed
 * Added more robust sanity checking if an invalid URL or path is being passed into `ImageTransform::appendExtension()`
