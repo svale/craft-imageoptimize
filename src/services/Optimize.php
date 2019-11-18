@@ -194,6 +194,8 @@ class Optimize extends Component
             $asset = $event->asset;
             if (ImageOptimize::$plugin->transformMethod->canManipulateAsImage($asset->getExtension(), $asset->height)) {
                 $transform = new AssetTransform([
+                    // 'height' => ($asset->width && $asset->height) ? (int)round($event->width * ($asset->height / $asset->width)) : $event->height,
+                    'height' => $asset->height ? null : $event->height, // ensures pdfs don't crash thumbnails generation by passing $event->height as fallback
                     'width' => $event->width,
                     'interlace' => 'line',
                 ]);
